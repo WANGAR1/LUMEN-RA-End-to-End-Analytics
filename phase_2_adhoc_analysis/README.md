@@ -94,7 +94,11 @@ measuring real allyship impact.
 ---
 
 ## Tools Used
-Luca Studio · SQL Server · Mockaroo datasets
+Lookerstudio · SQL Server · Mockaroo datasets
 
 ## Files
 - Ad hoc dashboard screenshot included in this folder
+
+## Full Details
+See the /documentation folder for KPIs, business questions 
+answered, and key findings from both dashboards.
