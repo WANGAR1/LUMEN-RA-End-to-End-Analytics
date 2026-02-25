@@ -28,3 +28,7 @@ No software installation needed.
 
 ## Tools
 Power BI Desktop · HTML · CSS · JavaScript
+
+## Full Details
+See the /documentation folder for KPIs, business questions 
+answered, and key findings from both dashboards.
