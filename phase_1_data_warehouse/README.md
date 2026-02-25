@@ -26,3 +26,7 @@ The warehouse follows three layers:
 
 ## Tools
 SQL Server · dbdiagram.io · Mockaroo · Excel
+
+## Full Details
+See the /documentation folder for complete schema design, 
+data generation process, and architecture decisions.
