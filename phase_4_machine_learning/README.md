@@ -14,4 +14,8 @@ predict learning success on the Lumera platform.
 (To be added by the machine learning team)
 
 ## Tools
-Python · Pandas · Scikit-learn · Jupyter Notebook
+Python · Pandas · Jupyter Notebook
+
+## Full Details
+See the /documentation folder for KPIs, business questions 
+answered, and key findings from both dashboards.
