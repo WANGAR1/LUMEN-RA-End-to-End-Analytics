@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumera – Retention & Impact Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #F5F0E8;
+  --dark: #1C3333;
+  --orange: #C4622D;
+  --sage: #7A9E87;
+  --light-sage: #B8D4C0;
+  --charcoal: #2C2C2C;
+  --white: #FFFFFF;
+  --light-cream: #FAF7F2;
+  --border: #E8E0D0;
+  --orange-light: #F2D5C4;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--charcoal);
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.header {
+  background: linear-gradient(135deg, var(--dark) 0%, #2E5555 100%);
+  border-radius: 16px;
+  padding: 28px 36px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 8px 32px rgba(28,51,51,0.25);
+}
+
+.header-left { display: flex; align-items: center; gap: 16px; }
+
+.header-icon {
+  width: 52px; height: 52px;
+  background: var(--sage);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  color: var(--white);
+}
+
+.header-subtitle {
+  font-size: 13px;
+  color: var(--light-sage);
+  margin-top: 3px;
+  font-weight: 300;
+}
+
+.header-badge {
+  background: rgba(122,158,135,0.25);
+  border: 1px solid rgba(122,158,135,0.4);
+  color: var(--light-sage);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 20px 20px 16px;
+  box-shadow: 0 2px 12px rgba(28,51,51,0.06);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.kpi-card:hover { transform: translateY(-3px); }
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--sage);
+  border-radius: 14px 14px 0 0;
+}
+
+.kpi-icon {
+  width: 36px; height: 36px;
+  background: #E8F0EA;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.kpi-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--dark);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.kpi-value.accent { color: var(--orange); }
+.kpi-value.sage { color: var(--sage); }
+
+.kpi-label {
+  font-size: 12px;
+  color: #8A9099;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.charts-grid-bottom {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.chart-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(28,51,51,0.06);
+  border: 1px solid var(--border);
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.chart-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.chart-icon {
+  width: 32px; height: 32px;
+  background: #F0F4F0;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+
+/* Stacked bar chart for drop off */
+.stacked-chart { display: flex; flex-direction: column; gap: 11px; }
+
+.stacked-row { display: flex; flex-direction: column; gap: 4px; }
+
+.stacked-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--charcoal);
+  display: flex;
+  justify-content: space-between;
+}
+
+.stacked-bar {
+  height: 10px;
+  border-radius: 5px;
+  display: flex;
+  overflow: hidden;
+}
+
+.seg-started { background: #E8D5C4; }
+.seg-inprog { background: var(--sage); }
+.seg-completed { background: var(--orange); }
+
+.stacked-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.leg-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #6A7280; }
+.leg-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* User leaderboard */
+.leaderboard { display: flex; flex-direction: column; gap: 10px; }
+
+.leader-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--light-cream);
+  border: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.leader-row:hover { background: var(--orange-light); }
+
+.leader-rank {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--orange);
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.leader-rank.gold { color: #B8860B; }
+.leader-rank.silver { color: #8A9099; }
+.leader-rank.bronze { color: #CD7F32; }
+
+.leader-info { flex: 1; }
+.leader-name { font-size: 13px; font-weight: 600; color: var(--dark); }
+.leader-dept { font-size: 11px; color: #8A9099; }
+
+.leader-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.leader-acts { font-size: 13px; font-weight: 700; color: var(--orange); }
+.leader-score { font-size: 11px; color: #8A9099; }
+
+/* Retention metrics visual */
+.retention-visual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.ret-metric {
+  background: var(--light-cream);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.ret-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.ret-label { font-size: 11px; color: #8A9099; text-transform: uppercase; letter-spacing: 0.8px; }
+
+/* Progress scatter viz */
+.scatter-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 4px;
+  height: 180px;
+}
+
+.scatter-cell {
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.scatter-cell:hover { transform: scale(1.1); }
+
+/* Journey line */
+.journey-chart {
+  position: relative;
+  height: 160px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 0 20px;
+}
+
+.journey-bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.journey-bar {
+  width: 100%;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, var(--orange), #E8845A);
+  position: relative;
+}
+
+.journey-seq {
+  font-size: 10px;
+  color: #8A9099;
+  margin-top: 4px;
+}
+
+.journey-val {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 2px;
+}
+
+.insight-box {
+  background: linear-gradient(135deg, var(--dark), #2E5555);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+}
+
+.insight-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  margin-bottom: 12px;
+  color: var(--light-sage);
+}
+
+.insight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #B0C4C4;
+}
+
+.insight-bullet {
+  width: 6px; height: 6px;
+  background: var(--orange);
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.sdg-footer {
+  background: var(--dark);
+  border-radius: 14px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sdg-text { color: var(--light-sage); font-size: 12px; }
+.sdg-badge {
+  background: var(--sage);
+  color: white;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.kpi-card { animation: fadeUp 0.4s ease both; }
+.kpi-card:nth-child(1) { animation-delay: 0.05s; }
+.kpi-card:nth-child(2) { animation-delay: 0.1s; }
+.kpi-card:nth-child(3) { animation-delay: 0.15s; }
+.kpi-card:nth-child(4) { animation-delay: 0.2s; }
+.kpi-card:nth-child(5) { animation-delay: 0.25s; }
+.chart-card { animation: fadeUp 0.5s 0.2s ease both; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-icon">🔄</div>
+    <div>
+      <div class="header-title">Lumera Retention & Impact</div>
+      <div class="header-subtitle">Digital Allyship Toolkit — User Behaviour & Drop-off Analysis</div>
+    </div>
+  </div>
+  <div class="header-badge">📊 Dashboard 2 of 2 &nbsp;·&nbsp; 39 Learners &nbsp;·&nbsp; Feb 2026</div>
+</div>
+
+<!-- KPI ROW -->
+<div class="kpi-row">
+  <div class="kpi-card">
+    <div class="kpi-icon">🔁</div>
+    <div class="kpi-value sage">31</div>
+    <div class="kpi-label">Returning Users</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon">📊</div>
+    <div class="kpi-value accent">3.2</div>
+    <div class="kpi-label">Avg Sessions / User</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon">⚠️</div>
+    <div class="kpi-value" style="color:#E05A2B">18</div>
+    <div class="kpi-label">Drop-off Events</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon">🏅</div>
+    <div class="kpi-value accent">99.2</div>
+    <div class="kpi-label">Top Quiz Score</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon">🎯</div>
+    <div class="kpi-value sage">79%</div>
+    <div class="kpi-label">Return Rate</div>
+  </div>
+</div>
+
+<!-- ROW 1 -->
+<div class="charts-grid">
+
+  <!-- Where Users Drop Off -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="chart-title">Where Users Drop Off</div>
+      <div class="chart-icon">⚠️</div>
+    </div>
+    <div class="stacked-chart">
+      <div class="stacked-row">
+        <div class="stacked-label"><span>Self Care</span><span style="color:#C4622D">4 done · 3 dropped</span></div>
+        <div class="stacked-bar" style="width:100%"><div class="seg-started" style="width:25%"></div><div class="seg-inprog" style="width:42%"></div><div class="seg-completed" style="width:33%"></div></div>
+      </div>
+      <div class="stacked-row">
+        <div class="stacked-label"><span>Myths vs Facts</span><span style="color:#E05A2B">2 done · 1 dropped</span></div>
+        <div class="stacked-bar" style="width:100%"><div class="seg-started" style="width:11%"></div><div class="seg-inprog" style="width:67%"></div><div class="seg-completed" style="width:22%"></div></div>
+      </div>
+      <div class="stacked-row">
+        <div class="stacked-label"><span>Respond Calmly</span><span style="color:#E05A2B">2 done · 1 dropped</span></div>
+        <div class="stacked-bar" style="width:100%"><div class="seg-started" style="width:11%"></div><div class="seg-inprog" style="width:67%"></div><div class="seg-completed" style="width:22%"></div></div>
+      </div>
+      <div class="stacked-row">
+        <div class="stacked-label"><span>Safe Referral</span><span style="color:#E05A2B">4 done · 3 dropped</span></div>
+        <div class="stacked-bar" style="width:100%"><div class="seg-started" style="width:43%"></div><div class="seg-inprog" style="width:0%"></div><div class="seg-completed" style="width:57%"></div></div>
+      </div>
+      <div class="stacked-row">
+        <div class="stacked-label"><span>Long-Term Allyship</span><span style="color:#E05A2B">2 done · 2 dropped</span></div>
+        <div class="stacked-bar" style="width:100%"><div class="seg-started" style="width:25%"></div><div class="seg-inprog" style="width:50%"></div><div class="seg-completed" style="width:25%"></div></div>
+      </div>
+      <div class="stacked-row">
+        <div class="stacked-label"><span>What is GBV</span><span style="color:#7A9E87">4 done · 2 dropped</span></div>
+        <div class="stacked-bar" style="width:100%"><div class="seg-started" style="width:22%"></div><div class="seg-inprog" style="width:33%"></div><div class="seg-completed" style="width:44%"></div></div>
+      </div>
+      <div class="stacked-row">
+        <div class="stacked-label"><span>Emotional Support</span><span style="color:#7A9E87">5 done · 2 dropped</span></div>
+        <div class="stacked-bar" style="width:100%"><div class="seg-started" style="width:25%"></div><div class="seg-inprog" style="width:12%"></div><div class="seg-completed" style="width:63%"></div></div>
+      </div>
+    </div>
+    <div class="stacked-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#E8D5C4"></div>Started</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#7A9E87"></div>In Progress</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#C4622D"></div>Completed</div>
+    </div>
+  </div>
+
+  <!-- Top Engaged Users -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="chart-title">Top Engaged Learners</div>
+      <div class="chart-icon">🏆</div>
+    </div>
+    <div class="leaderboard">
+      <div class="leader-row">
+        <div class="leader-rank gold">1</div>
+        <div class="leader-info"><div class="leader-name">Mariejeanne Lehr</div><div class="leader-dept">Legal</div></div>
+        <div class="leader-stats"><div class="leader-acts">7 activities</div><div class="leader-score">Avg 43.0</div></div>
+      </div>
+      <div class="leader-row">
+        <div class="leader-rank gold">1</div>
+        <div class="leader-info"><div class="leader-name">Cornell Raikes</div><div class="leader-dept">Management</div></div>
+        <div class="leader-stats"><div class="leader-acts">7 activities</div><div class="leader-score">Avg 72.1</div></div>
+      </div>
+      <div class="leader-row">
+        <div class="leader-rank silver">3</div>
+        <div class="leader-info"><div class="leader-name">Martin Clyant</div><div class="leader-dept">Legal</div></div>
+        <div class="leader-stats"><div class="leader-acts">6 activities</div><div class="leader-score">Avg 72.5</div></div>
+      </div>
+      <div class="leader-row">
+        <div class="leader-rank bronze">4</div>
+        <div class="leader-info"><div class="leader-name">Nathanial Tenbrug</div><div class="leader-dept">Education</div></div>
+        <div class="leader-stats"><div class="leader-acts">5 activities</div><div class="leader-score">Avg 75.4</div></div>
+      </div>
+      <div class="leader-row">
+        <div class="leader-rank" style="color:#8A9099">5</div>
+        <div class="leader-info"><div class="leader-name">Seana Tregear</div><div class="leader-dept">Community</div></div>
+        <div class="leader-stats"><div class="leader-acts">4 activities</div><div class="leader-score">Avg 93.0 ⭐</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Retention & Return Metrics -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="chart-title">Retention Metrics</div>
+      <div class="chart-icon">🔄</div>
+    </div>
+    <div class="retention-visual">
+      <div class="ret-metric">
+        <div class="ret-value" style="color:#C4622D">79%</div>
+        <div class="ret-label">Return Rate</div>
+        <div style="font-size:11px;color:#8A9099;margin-top:4px">31 of 39 learners returned</div>
+      </div>
+      <div class="ret-metric">
+        <div class="ret-value" style="color:#1C3333">3.2x</div>
+        <div class="ret-label">Avg Sessions</div>
+        <div style="font-size:11px;color:#8A9099;margin-top:4px">per learner</div>
+      </div>
+      <div class="ret-metric">
+        <div class="ret-value" style="color:#7A9E87">37%</div>
+        <div class="ret-label">Completion Rate</div>
+        <div style="font-size:11px;color:#8A9099;margin-top:4px">41 of 111 activities</div>
+      </div>
+      <div class="ret-metric">
+        <div class="ret-value" style="color:#E05A2B">16%</div>
+        <div class="ret-label">Drop-off Rate</div>
+        <div style="font-size:11px;color:#8A9099;margin-top:4px">18 started, never progressed</div>
+      </div>
+    </div>
+
+    <!-- Visual retention bar -->
+    <div style="margin-top:20px;padding:14px;background:var(--light-cream);border-radius:10px;">
+      <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:10px;">Learner Journey Funnel</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;"><span>Registered</span><span style="font-weight:700">39</span></div>
+          <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;"><div style="height:100%;width:100%;background:var(--dark);border-radius:4px;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;"><span>Active (any activity)</span><span style="font-weight:700">35</span></div>
+          <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;"><div style="height:100%;width:90%;background:var(--sage);border-radius:4px;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;"><span>Returned (2+ activities)</span><span style="font-weight:700">31</span></div>
+          <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;"><div style="height:100%;width:79%;background:var(--orange);border-radius:4px;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;"><span>Completed ≥1 module</span><span style="font-weight:700">27</span></div>
+          <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;"><div style="height:100%;width:69%;background:#E8845A;border-radius:4px;"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROW 2 -->
+<div class="charts-grid-bottom">
+
+  <!-- Learning Journey Progress -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="chart-title">Learning Journey — Avg Progress by Module Stage</div>
+      <div class="chart-icon">🗺️</div>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:6px;height:180px;padding:10px 0 0;">
+      <!-- sequence 1-15, avg progress per module -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">35.9</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#C4622D,#E8845A);height:44%"></div>
+        <div style="font-size:9px;color:#8A9099">M1</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">47.6</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#C4622D,#E8845A);height:58%"></div>
+        <div style="font-size:9px;color:#8A9099">M2</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">45.1</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#C4622D,#E8845A);height:55%"></div>
+        <div style="font-size:9px;color:#8A9099">M3</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">46.1</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#7A9E87,#9FBFA9);height:56%"></div>
+        <div style="font-size:9px;color:#8A9099">M4</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">48.0</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#7A9E87,#9FBFA9);height:59%"></div>
+        <div style="font-size:9px;color:#8A9099">M5</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">48.3</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#7A9E87,#9FBFA9);height:59%"></div>
+        <div style="font-size:9px;color:#8A9099">M6</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">56.6</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#1C3333,#2E5555);height:69%"></div>
+        <div style="font-size:9px;color:#8A9099">M7</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">55.2</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#1C3333,#2E5555);height:67%"></div>
+        <div style="font-size:9px;color:#8A9099">M8</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">58.3</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#1C3333,#2E5555);height:71%"></div>
+        <div style="font-size:9px;color:#8A9099">M9</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">64.6</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#C4622D,#E8845A);height:79%"></div>
+        <div style="font-size:9px;color:#8A9099">M10</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">52.8</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#C4622D,#E8845A);height:64%"></div>
+        <div style="font-size:9px;color:#8A9099">M11</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">62.5</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#C4622D,#E8845A);height:76%"></div>
+        <div style="font-size:9px;color:#8A9099">M12</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">52.0</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#7A9E87,#9FBFA9);height:63%"></div>
+        <div style="font-size:9px;color:#8A9099">M13</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">67.8</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#7A9E87,#9FBFA9);height:82%"></div>
+        <div style="font-size:9px;color:#8A9099">M14</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+        <div style="font-size:9px;font-weight:600;color:#1C3333">42.3</div>
+        <div style="width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#7A9E87,#9FBFA9);height:52%"></div>
+        <div style="font-size:9px;color:#8A9099">M15</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:#8A9099;text-align:center;">
+      M1–M15 across all 5 courses &nbsp;·&nbsp; Knowing Limits (M10) shows highest avg progress at 64.6%
+    </div>
+  </div>
+
+  <!-- Key Insights -->
+  <div class="chart-card" style="display:flex;flex-direction:column;gap:16px;">
+    <div class="chart-header" style="margin-bottom:0">
+      <div class="chart-title">Impact Insights</div>
+      <div class="chart-icon">💡</div>
+    </div>
+
+    <div class="insight-box">
+      <div class="insight-title">🔍 What the Data Shows</div>
+      <div class="insight-item"><div class="insight-bullet"></div>79% of learners returned for more than one session — strong early retention signal</div>
+      <div class="insight-item"><div class="insight-bullet"></div>Emotional Support module has the highest completion (5) — most engaging content</div>
+      <div class="insight-item"><div class="insight-bullet"></div>Safe Referral has 3 drop-offs despite 4 completions — content may feel intimidating</div>
+      <div class="insight-item"><div class="insight-bullet"></div>Seana Tregear leads with avg score 93.0 — highest quality learner</div>
+      <div class="insight-item"><div class="insight-bullet"></div>Module 14 (Long-Term Allyship) shows highest avg progress at 67.8% — users most engaged late in journey</div>
+    </div>
+
+    <div style="background:var(--light-cream);border-radius:12px;padding:16px;border:1px solid var(--border);">
+      <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:12px;">📋 Behaviour Predicts Completion</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span style="color:#6A7280">Users with 4+ activities</span>
+          <span style="font-weight:700;color:#C4622D">10 learners</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span style="color:#6A7280">Users with 1 activity only</span>
+          <span style="font-weight:700;color:#E05A2B">8 learners</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span style="color:#6A7280">Avg score for power users</span>
+          <span style="font-weight:700;color:#7A9E87">71.3</span>
+        </div>
+        <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+        <div style="font-size:11px;color:#8A9099;line-height:1.5;">Learners who engage 4+ times score 8.4 points higher on average, suggesting consistent engagement is the strongest predictor of success.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="sdg-footer">
+  <div class="sdg-text">🌍 Lumera · Team 39 · Women Tech Fest 2025 · Admins excluded · Learner-only analysis</div>
+  <div class="sdg-badge">SDG 5 — Gender Equality</div>
+</div>
+
+</body>
+</html>
