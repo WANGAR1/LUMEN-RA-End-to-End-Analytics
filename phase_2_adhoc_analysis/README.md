@@ -14,6 +14,14 @@ four visualizations each answering a distinct business question.
 
 ## Dashboard — Team 39 | Ad Hoc Performance Analysis
 
+
+<img width="1876" height="779" alt="Screenshot 2026-02-26 231515" src="https://github.com/user-attachments/assets/35e34019-a964-4df3-8542-7224e3bfdc07" />
+
+
+
+<img width="1869" height="619" alt="Screenshot 2026-02-26 231528" src="https://github.com/user-attachments/assets/3d788462-9101-4690-8158-4230f0ed7f0c" />
+
+
 ### Visual 1 — Monthly Active Users (MAU) Trend
 **Line Chart**
 
