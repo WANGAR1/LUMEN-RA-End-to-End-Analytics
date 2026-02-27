@@ -40,6 +40,13 @@ Answers questions about user return rates and drop-off behaviour.
 Download the file and open it in Chrome, Edge, or any browser. 
 No software installation needed.
 
+## 📊 View the Dashboards Live
+
+| Dashboard | Link |
+|-----------|------|
+| Platform Analytics | [Open Dashboard](https://wangar1.github.io/LUMEN-RA-End-to-End-Analytics/phase_3_dashboards/LumenRa_Dashboard1_Platform_Analytics.html) |
+| Retention & Impact | [Open Dashboard](https://wangar1.github.io/LUMEN-RA-End-to-End-Analytics/phase_3_dashboards/LumenRa_Dashboard2_Retention_Impact.html) |
+
 ## Tools
 Power BI Desktop · HTML · CSS · JavaScript
 
