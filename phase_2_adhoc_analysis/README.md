@@ -22,6 +22,12 @@ four visualizations each answering a distinct business question.
 <img width="1869" height="619" alt="Screenshot 2026-02-26 231528" src="https://github.com/user-attachments/assets/3d788462-9101-4690-8158-4230f0ed7f0c" />
 
 
+## 📊 View the Dashboard Live
+
+| Dashboard | Link |
+|-----------|------|
+| Ad Hoc Performance Analysis | [Open Dashboard](https://wangar1.github.io/LUMEN-RA-End-to-End-Analytics/phase_2_adhoc_analysis/LumenRa_Dashboard_Phase2_AdHoc.html) |
+
 ### Visual 1 — Monthly Active Users (MAU) Trend
 **Line Chart**
 
